@@ -57,11 +57,15 @@ async def slide_match_endpoint(
         simple_target: bool = Form(False)
 ):
     try:
-        if (background is None and target is None) or (background_file.size == 0 and target_file.size == 0):
+        has_target = (target_file is not None and target_file.size > 0) or target is not None
+        has_background = (background_file is not None and background_file.size > 0) or background is not None
+        if not has_target or not has_background:
             return APIResponse(code=400, message="Both target and background must be provided")
 
-        target_bytes = await decode_image(target_file or target)
-        background_bytes = await decode_image(background_file or background)
+        target_input = target_file if target_file and target_file.size > 0 else target
+        background_input = background_file if background_file and background_file.size > 0 else background
+        target_bytes = await decode_image(target_input)
+        background_bytes = await decode_image(background_input)
         result = ocr_service.slide_match(target_bytes, background_bytes, simple_target)
         return APIResponse(code=200, message="Success", data=result)
     except Exception as e:

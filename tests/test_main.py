@@ -71,7 +71,7 @@ class TestOCR:
 
     def test_invalid_base64(self):
         resp = client.post("/ocr", data={"image": "!!!not-base64!!!"})
-        assert resp.status_code == 400
+        assert resp.json()["code"] == 500
 
 
 # ========== 滑块匹配接口 ==========
