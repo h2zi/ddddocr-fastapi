@@ -9,6 +9,7 @@
     "automerge": true
   },
   "platformAutomerge": true,
+  "forkProcessing": "enabled",
   "packageRules": [
     {
       "groupName": "non-major dependencies",
